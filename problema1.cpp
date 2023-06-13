@@ -10,6 +10,12 @@ long long count = 0;
 void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>& pisar, long long objetivo, long long posicionActual, long long ac);
 
 
+long long* pisandoEscalonesPD(long long *A, long long n,long long k,vector<long long>& saltos,long long c){
+	//long long *B = new long long[n];
+	//A[1] = 1;
+	return A;
+}
+
 int main(int argc, char **argv){
 	long long n, p, k = 0;
 	if(argc != 3){
@@ -38,7 +44,6 @@ int main(int argc, char **argv){
 		
 	}
 	
-	cout << "hola" << endl;
 	vector<long long> saltos;
 	while(pow(p, k) <= n){
 		saltos.push_back(pow(p, k));
@@ -57,15 +62,21 @@ int main(int argc, char **argv){
 	//long long ac = 0;
 	double t1 = omp_get_wtime();
     
-	pisandoEscalones(E, saltos, pisar,n, 0, 0);
+	//pisandoEscalones(E, saltos, pisar,n, 0, 0);
 	double t2 = omp_get_wtime();
 	double tiempo = t2 - t1;
 	cout << "\nTiempo fuerza bruta: " << tiempo << "s" << endl;
 	
-	
-	
-	
-
+	for(int j = 0; j < k; j++){
+		if(saltos[j] <= n)
+			E[saltos[j]] = 1;
+	}
+	vector<long long> pisarPD; 
+	long long *A= new long long[n];
+	long long *array = pisandoEscalonesPD(A,n,k,saltos,0);
+	for(long long i = 0; i < n;i++)
+		cout << array[i] << " " ;
+	cout << endl;
 	cout << "\n### Problema 1 ###" << endl;
 	return EXIT_SUCCESS;
 }
@@ -81,7 +92,7 @@ void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>
 		ac = 0;
 		cout << endl;
         
-    } else  {
+    } else  {  
         // Continuar explorando posibilidades
         for (long long i = 0;  i< (long long) saltos.size();i++) {
 			if(E[ac+saltos[i]-1] == 1){
@@ -89,7 +100,6 @@ void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>
 				pisandoEscalones(E, saltos, pisar, n, posicion + saltos[i] , ac + saltos[i]);
 				pisar.pop_back();
 			}
-			
         }
     }
 }
