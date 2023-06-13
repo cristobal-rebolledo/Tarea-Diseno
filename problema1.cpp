@@ -38,7 +38,7 @@ int main(int argc, char **argv){
 		
 	}
 	
-	
+	cout << "hola" << endl;
 	vector<long long> saltos;
 	while(pow(p, k) <= n){
 		saltos.push_back(pow(p, k));
