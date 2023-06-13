@@ -1,4 +1,4 @@
-CC=g++
+CC=g++ -fopenmp -o prog
 CFLAGS=-Wall -std=c++14
 BINS=problema1 problema2
 all: clean problema1 problema2
