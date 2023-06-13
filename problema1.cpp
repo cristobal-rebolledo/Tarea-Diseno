@@ -26,7 +26,11 @@ int main(int argc, char **argv){
 	cout <<"El r: " << r << endl;
 	
 	for(int i = 0; i < r;i++){
-		E[rand() % (n - 1)] = 0;
+		int aleatorio = rand() % (n - 1);
+		while(E[aleatorio] == 0)
+			aleatorio = rand() % (n - 1);
+		E[aleatorio] = 0;
+		
 	}
 	for(int i = 0; i < n;i++)
 		cout << E[i] << " " ;
