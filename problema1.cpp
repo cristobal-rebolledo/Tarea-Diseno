@@ -41,7 +41,6 @@ int main(int argc, char **argv){
 		while(E[aleatorio] == 0)
 			aleatorio = rand() % (n - 1);
 		E[aleatorio] = 0;
-		
 	}
 	
 	vector<long long> saltos;
@@ -67,31 +66,28 @@ int main(int argc, char **argv){
 	double tiempo = t2 - t1;
 	cout << "\nTiempo fuerza bruta: " << tiempo << "s" << endl;
 	long long *salt= new long long[k];
-	for(int j = 0; j < k; j++){
-		salt[j] = saltos[j]; 
-	}
+	
 	vector<long long> pisarPD; 
-	long long *A= new long long[n];
-	int ac2 = 0, pos = 0;
-	//long long *array = pisandoEscalonesPD(A,n,k,saltos,0);
-	for(long long i = 0; i < n;i++){
+	//long long *dp= new long long[n+1]
+
+	std::vector<long long> dp(n + 1, 0);
+	int s = 0;
+	//while(E[s] == 0)s++;
 		
-			int j = 0;
-			A[i] = ac2+saltos[j];
-			while(A[i] < n && j < k){
-				if(E[A[i]-1] == 1 ){
-					A[i] += saltos[j];
-				}
-				else{
-					j++;
-					A[i] +=  saltos[j]-1;
-				}
-					
-			}
-				
-	}
-	for(long long i = 0; i < n;i++)
-		cout << A[i] << " " ;
+    dp[s] = 1;  // Caso base: hay una forma de llegar al escalón 0
+	cout << s << endl;
+    // Calcular el número de formas de llegar a cada escalón utilizando programación dinámica
+    for (long long i = s; i <= n; i++) {
+        for (long long j = 0; j < static_cast<long long>(saltos.size()); j++) {
+            if (i - saltos[j] >= 0 && E[i - saltos[j]-1] != 0) {
+                dp[i] += dp[i - saltos[j]];
+            }
+        }
+    }
+	for (long long i = 1; i <= n; i++)
+		cout << dp[i] << " ";
+	cout << endl;
+	cout << "Número de formas de llegar al escalón " << n << ": " << dp[n] << endl;
 	cout << endl;
 	cout << "\n### Problema 1 ###" << endl;
 	return EXIT_SUCCESS;
@@ -111,7 +107,7 @@ void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>
     } else  {  
         // Continuar explorando posibilidades
         for (long long i = 0;  i< (long long) saltos.size();i++) {
-			if(E[ac+saltos[i]-1] == 1){
+			if(E[ac+saltos[i]-1] != 0){
 				pisar.push_back(ac+saltos[i]);
 				pisandoEscalones(E, saltos, pisar, n,  ac + saltos[i]);
 				pisar.pop_back();
