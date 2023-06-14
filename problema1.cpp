@@ -66,26 +66,32 @@ int main(int argc, char **argv){
 	double t2 = omp_get_wtime();
 	double tiempo = t2 - t1;
 	cout << "\nTiempo fuerza bruta: " << tiempo << "s" << endl;
-	
+	long long *salt= new long long[k];
 	for(int j = 0; j < k; j++){
-		if(saltos[j] <= n)
-			E[saltos[j]] = 1;
+		salt[j] = saltos[j]; 
 	}
 	vector<long long> pisarPD; 
 	long long *A= new long long[n];
-	int ac2 = 0;
+	int ac2 = 0, pos = 0;
 	//long long *array = pisandoEscalonesPD(A,n,k,saltos,0);
 	for(long long i = 0; i < n;i++){
 		
-		for(int j = 0; j < k; j++){
-			if(E[ac2+saltos[j]-1] == 1 && ac2 < n){
-				A[i] = ac2+saltos[j]; 
-				ac2 = ac2+saltos[j];
+			int j = 0;
+			A[i] = ac2+saltos[j];
+			while(A[i] < n && j < k){
+				if(E[A[i]-1] == 1 ){
+					A[i] += saltos[j];
+				}
+				else{
+					j++;
+					A[i] +=  saltos[j]-1;
+				}
+					
 			}
-		}
+				
 	}
 	for(long long i = 0; i < n;i++)
-		cout << A[i] << " " ;	
+		cout << A[i] << " " ;
 	cout << endl;
 	cout << "\n### Problema 1 ###" << endl;
 	return EXIT_SUCCESS;
