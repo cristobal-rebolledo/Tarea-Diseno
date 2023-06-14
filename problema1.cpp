@@ -7,7 +7,7 @@ using namespace std;
 
 long long count = 0;
 
-void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>& pisar, long long objetivo, long long posicionActual, long long ac);
+void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>& pisar, long long objetivo, long long ac);
 
 
 long long* pisandoEscalonesPD(long long *A, long long n,long long k,vector<long long>& saltos,long long c){
@@ -62,7 +62,7 @@ int main(int argc, char **argv){
 	//long long ac = 0;
 	double t1 = omp_get_wtime();
     
-	pisandoEscalones(E, saltos, pisar,n, 0, 0);
+	pisandoEscalones(E, saltos, pisar,n, 0);
 	double t2 = omp_get_wtime();
 	double tiempo = t2 - t1;
 	cout << "\nTiempo fuerza bruta: " << tiempo << "s" << endl;
@@ -97,8 +97,8 @@ int main(int argc, char **argv){
 	return EXIT_SUCCESS;
 }
 
-void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>& pisar, long long n, long long posicion, long long ac) {
-    if (posicion == n) {
+void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>& pisar, long long n,  long long ac) {
+    if (ac == n) {
         // Se ha llegado al objetivo, imprimir el camino encontrado
 		count++;
         cout << "-Forma " << count  << ": pisando los escalones: "; 
@@ -113,7 +113,7 @@ void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>
         for (long long i = 0;  i< (long long) saltos.size();i++) {
 			if(E[ac+saltos[i]-1] == 1){
 				pisar.push_back(ac+saltos[i]);
-				pisandoEscalones(E, saltos, pisar, n, posicion + saltos[i] , ac + saltos[i]);
+				pisandoEscalones(E, saltos, pisar, n,  ac + saltos[i]);
 				pisar.pop_back();
 			}
         }
