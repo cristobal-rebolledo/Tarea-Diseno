@@ -8,13 +8,9 @@ using namespace std;
 long long count = 0;
 
 void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>& pisar, long long objetivo, long long ac);
+long long pisandoEscalonesPD(long long *E, vector<long long>& saltos,long long n, long long k);
+void imprimir(vector<long long>& pisar);
 
-
-long long* pisandoEscalonesPD(long long *A, long long n,long long k,vector<long long>& saltos,long long c){
-	//long long *B = new long long[n];
-	//A[1] = 1;
-	return A;
-}
 
 int main(int argc, char **argv){
 	long long n, p, k = 0;
@@ -60,34 +56,23 @@ int main(int argc, char **argv){
     vector<long long> pisar; 
 	//long long ac = 0;
 	double t1 = omp_get_wtime();
-    
 	pisandoEscalones(E, saltos, pisar,n, 0);
 	double t2 = omp_get_wtime();
 	double tiempo = t2 - t1;
 	cout << "\nTiempo fuerza bruta: " << tiempo << "s" << endl;
-	long long *salt= new long long[k];
-	
-	vector<long long> pisarPD; 
-	//long long *dp= new long long[n+1]
-
-	std::vector<long long> dp(n + 1, 0);
-	int s = 0;
-	//while(E[s] == 0)s++;
 		
-    dp[s] = 1;  // Caso base: hay una forma de llegar al escalón 0
-	cout << s << endl;
+      // Caso base: hay una forma de llegar al escalón 0
+	
     // Calcular el número de formas de llegar a cada escalón utilizando programación dinámica
-    for (long long i = s; i <= n; i++) {
-        for (long long j = 0; j < static_cast<long long>(saltos.size()); j++) {
-            if (i - saltos[j] >= 0 && E[i - saltos[j]-1] != 0) {
-                dp[i] += dp[i - saltos[j]];
-            }
-        }
-    }
-	for (long long i = 1; i <= n; i++)
-		cout << dp[i] << " ";
+    double t3 = omp_get_wtime();
+	long long cantidadSaltos = pisandoEscalonesPD(E, saltos, n, k);
+	double t4 = omp_get_wtime();
+	double tiempo2 = t4 - t3;
+	cout << "\nTiempo PD: " << tiempo2 << "s" << endl;
+
+	
 	cout << endl;
-	cout << "Número de formas de llegar al escalón " << n << ": " << dp[n] << endl;
+	cout << "Número de formas de llegar al escalón " << n << ": " << cantidadSaltos<< endl;
 	cout << endl;
 	cout << "\n### Problema 1 ###" << endl;
 	return EXIT_SUCCESS;
@@ -96,13 +81,15 @@ int main(int argc, char **argv){
 void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>& pisar, long long n,  long long ac) {
     if (ac == n) {
         // Se ha llegado al objetivo, imprimir el camino encontrado
-		count++;
+		
+		imprimir(pisar);
+		/*
         cout << "-Forma " << count  << ": pisando los escalones: "; 
         for (long long i = 0; i < (long long)pisar.size(); i++) 
-            cout << pisar[i] << " ";
+            cout << pisar[i] << " ";*/
         
 		ac = 0;
-		cout << endl;
+		//cout << endl;
         
     } else  {  
         // Continuar explorando posibilidades
@@ -114,4 +101,29 @@ void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>
 			}
         }
     }
+}
+
+
+long long pisandoEscalonesPD(long long *E, vector<long long>& saltos,long long n, long long k){
+	long long *A = new long long[n];
+	for(int i = 0; i < n; i++)
+		A[i] = 0;
+	A[0] = 1;
+	for (long long i = 0; i <= n; i++) {
+        for (long long j = 0; j < (long long)saltos.size(); j++) {
+            if (i - saltos[j] >= 0 && E[i - saltos[j]-1] != 0) {
+                A[i] += A[i - saltos[j]];
+            }
+        }
+    }
+
+	return A[n];
+}
+
+void imprimir(vector<long long>& pisar){
+	count++;
+    cout << "-Forma " << count  << ": pisando los escalones: "; 
+    for (long long i = 0; i < (long long)pisar.size(); i++) 
+    	cout << pisar[i] << " ";
+	//cout << endl;
 }
