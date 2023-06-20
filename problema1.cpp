@@ -56,7 +56,7 @@ int main(int argc, char **argv){
     vector<long long> pisar; 
 	//long long ac = 0;
 	double t1 = omp_get_wtime();
-	pisandoEscalones(E, saltos, pisar,n, 0);
+	//pisandoEscalones(E, saltos, pisar,n, 0);
 	double t2 = omp_get_wtime();
 	double tiempo = t2 - t1;
 	cout << "\nTiempo fuerza bruta: " << tiempo << "s" << endl;
@@ -110,16 +110,20 @@ long long pisandoEscalonesPD(long long *E, vector<long long>& saltos,long long n
 	long long *A = new long long[n];
 	for(int i = 0; i < n; i++)
 		A[i] = 0;
-	A[0] = 1;
-	for (long long i = 0; i <= n; i++) {
-        for (long long j = 0; j < (long long)saltos.size(); j++) {
-            if (i - saltos[j] >= 0 && E[i - saltos[j]-1] != 0) {
+	for (int j = 0; j<(int)saltos.size();j++){
+		if (saltos[j]-1<=n && E[saltos[j]-1]!=0){
+			A[saltos[j]-1]=1;
+		}
+	}
+	for (int i = 0; i < n; i++) {
+        for (int j = 0; j < (int)saltos.size(); j++) {
+            if (i - saltos[j] >= 0 && E[i-saltos[j]] == 1) {
                 A[i] += A[i - saltos[j]];
             }
         }
     }
 
-	return A[n];
+	return A[n-1];
 }
 
 void imprimir(vector<long long>& pisar){
