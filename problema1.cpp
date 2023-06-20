@@ -96,7 +96,7 @@ void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>
     } else  {  
         // Continuar explorando posibilidades
         for (long long i = 0;  i< (long long) saltos.size();i++) {
-			if(E[ac+saltos[i]-1] != 0){
+			if(E[ac+saltos[i]-1] == 1){
 				//pisar.push_back(ac+saltos[i]);
 				pisandoEscalones(E, saltos, pisar, n,  ac + saltos[i]);
 				//pisar.pop_back();
