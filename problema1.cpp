@@ -60,6 +60,7 @@ int main(int argc, char **argv){
 	double t2 = omp_get_wtime();
 	double tiempo = t2 - t1;
 	cout << "\nTiempo fuerza bruta: " << tiempo << "s" << endl;
+	cout << "Con " << count << " soluciones." << endl;
 		
       // Caso base: hay una forma de llegar al escalón 0
 	
@@ -82,22 +83,23 @@ void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>
     if (ac == n) {
         // Se ha llegado al objetivo, imprimir el camino encontrado
 		
-		imprimir(pisar);
+		//imprimir(pisar);
 		/*
         cout << "-Forma " << count  << ": pisando los escalones: "; 
         for (long long i = 0; i < (long long)pisar.size(); i++) 
             cout << pisar[i] << " ";*/
         
 		ac = 0;
+		++count;
 		//cout << endl;
         
     } else  {  
         // Continuar explorando posibilidades
         for (long long i = 0;  i< (long long) saltos.size();i++) {
 			if(E[ac+saltos[i]-1] != 0){
-				pisar.push_back(ac+saltos[i]);
+				//pisar.push_back(ac+saltos[i]);
 				pisandoEscalones(E, saltos, pisar, n,  ac + saltos[i]);
-				pisar.pop_back();
+				//pisar.pop_back();
 			}
         }
     }
