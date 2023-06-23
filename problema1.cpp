@@ -7,7 +7,7 @@ using namespace std;
 
 long long count = 0;
 
-void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>& pisar, long long objetivo, long long ac);
+void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>& pisar, long long objetivo, long long ac , vector<long long>& menor);
 long long pisandoEscalonesPD(long long *E, vector<long long>& saltos,long long n, long long k);
 void imprimir(vector<long long>& pisar);
 
@@ -51,14 +51,20 @@ int main(int argc, char **argv){
 	cout << endl;
 	cout << endl;
 	k--;
-	//cout << k << endl;
 
-    vector<long long> pisar; 
-	//long long ac = 0;
+    vector<long long> pisar; // vector que guarda los saltos para llegar a n
 	double t1 = omp_get_wtime();
-	//pisandoEscalones(E, saltos, pisar,n, 0);
+	vector<long long> menor;   // vector que guarda la menor cantidad de saltos para llegar a n
+	
+	pisandoEscalones(E, saltos, pisar,n, 0,menor);   // funcion fuerza bruta
+	
 	double t2 = omp_get_wtime();
 	double tiempo = t2 - t1;
+	cout << "Menor cantidad de saltos: " << endl;;
+	for (long long i = 0; i < (long long)menor.size(); i++) 
+        cout << menor[i] << " ";
+	cout << endl;
+	cout << endl;
 	cout << "\nTiempo fuerza bruta: " << tiempo << "s" << endl;
 	cout << "Con " << count << " soluciones." << endl;
 		
@@ -79,16 +85,12 @@ int main(int argc, char **argv){
 	return EXIT_SUCCESS;
 }
 
-void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>& pisar, long long n,  long long ac) {
+void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>& pisar, long long n,  long long ac, vector<long long>& menor) {
     if (ac == n) {
-        // Se ha llegado al objetivo, imprimir el camino encontrado
 		
-		//imprimir(pisar);
-		/*
-        cout << "-Forma " << count  << ": pisando los escalones: "; 
-        for (long long i = 0; i < (long long)pisar.size(); i++) 
-            cout << pisar[i] << " ";*/
-        
+		if(menor.size() == 0 || pisar.size() < menor.size())  // actualiza la menor cantidad de saltos
+			menor = pisar;
+			
 		ac = 0;
 		++count;
 		//cout << endl;
@@ -97,9 +99,9 @@ void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>
         // Continuar explorando posibilidades
         for (long long i = 0;  i< (long long) saltos.size();i++) {
 			if(E[ac+saltos[i]-1] == 1){
-				//pisar.push_back(ac+saltos[i]);
-				pisandoEscalones(E, saltos, pisar, n,  ac + saltos[i]);
-				//pisar.pop_back();
+				pisar.push_back(ac+saltos[i]);
+				pisandoEscalones(E, saltos, pisar, n,  ac + saltos[i], menor);
+				pisar.pop_back();
 			}
         }
     }
