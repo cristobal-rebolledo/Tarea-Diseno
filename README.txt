@@ -1,0 +1,1 @@
+Para ejercutar ambos programas debe primero escribir el comando "make" en consola.
