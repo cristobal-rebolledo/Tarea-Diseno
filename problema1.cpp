@@ -9,11 +9,12 @@ long long count = 0;
 
 void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>& pisar, long long objetivo, long long ac , vector<long long>& menor);
 long long pisandoEscalonesPD(long long *E, vector<long long>& saltos,long long n, long long k);
-void imprimir(vector<long long>& pisar);
 
 
 int main(int argc, char **argv){
+	
 	long long n, p, k = 0;
+	
 	if(argc != 4){
 		cout << "Error. Debe ejecutarse como ./problema1 n p seed" << endl;
 		exit(EXIT_FAILURE);
@@ -22,16 +23,17 @@ int main(int argc, char **argv){
 	n = atoi(argv[1]);
 	p = atoi(argv[2]);
 	srand(atoi(argv[3]));
+	
 	long long *E = new long long[n];
 
-	
-	for(long long i = 0 ; i < n;i++){
+	// llena el arreglo con 1
+	for(long long i = 0 ; i < n;i++)
 		E[i] = 1;
-	}
 
 	long long r = rand() % (n - 1) + 1;
 	cout <<"El r: " << r << endl;
 	
+	// pone los r escalones rotos en forma aleatoria, los representa con 0
 	for(int i = 0; i < r;i++){
 		int aleatorio = rand() % (n - 1);
 		while(E[aleatorio] == 0)
@@ -39,10 +41,10 @@ int main(int argc, char **argv){
 		E[aleatorio] = 0;
 	}
 	
+	// pone en el vector saltos las potencias de p a la k 
 	vector<long long> saltos;
 	while(pow(p, k) <= n){
 		saltos.push_back(pow(p, k));
-		//cout << saltos[k] << " ";
 		k++;
 	}
 
@@ -53,13 +55,15 @@ int main(int argc, char **argv){
 	k--;
 
     vector<long long> pisar; // vector que guarda los saltos para llegar a n
-	double t1 = omp_get_wtime();
-	vector<long long> menor;   // vector que guarda la menor cantidad de saltos para llegar a n
 	
+	vector<long long> menor;   // vector que guarda la menor cantidad de saltos para llegar a n
+	double t1 = omp_get_wtime();
+
 	pisandoEscalones(E, saltos, pisar,n, 0,menor);   // funcion fuerza bruta
 	
 	double t2 = omp_get_wtime();
 	double tiempo = t2 - t1;
+
 	cout << "Menor cantidad de saltos: " << endl;;
 	for (long long i = 0; i < (long long)menor.size(); i++) 
         cout << menor[i] << " ";
@@ -68,11 +72,9 @@ int main(int argc, char **argv){
 	cout << "\nTiempo fuerza bruta: " << tiempo << "s" << endl;
 	cout << "Con " << count << " soluciones." << endl;
 		
-      // Caso base: hay una forma de llegar al escalón 0
 	
-    // Calcular el número de formas de llegar a cada escalón utilizando programación dinámica
     double t3 = omp_get_wtime();
-	long long cantidadSaltos = pisandoEscalonesPD(E, saltos, n, k);
+	long long cantidadSaltos = pisandoEscalonesPD(E, saltos, n, k);  // funcion programacion dinamica
 	double t4 = omp_get_wtime();
 	double tiempo2 = t4 - t3;
 	cout << "\nTiempo PD: " << tiempo2 << "s" << endl;
@@ -92,18 +94,18 @@ void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>
 			menor = pisar;
 			
 		ac = 0;
-		++count;
-		//cout << endl;
+		count++;
         
     } else  {  
-        // Continuar explorando posibilidades
-        for (long long i = 0;  i< (long long) saltos.size();i++) {
-			if(E[ac+saltos[i]-1] == 1){
-				pisar.push_back(ac+saltos[i]);
+
+        for (long long i = 0;  i< (long long) saltos.size();i++)   // tipos de saltos
+			if(E[ac+saltos[i]-1] == 1){                            // salto valido
+				pisar.push_back(ac+saltos[i]);                     // guarda los tipos de saltos en el vector
 				pisandoEscalones(E, saltos, pisar, n,  ac + saltos[i], menor);
 				pisar.pop_back();
 			}
-        }
+        
+
     }
 }
 
@@ -126,12 +128,4 @@ long long pisandoEscalonesPD(long long *E, vector<long long>& saltos,long long n
     }
 
 	return A[n-1];
-}
-
-void imprimir(vector<long long>& pisar){
-	count++;
-    cout << "-Forma " << count  << ": pisando los escalones: "; 
-    for (long long i = 0; i < (long long)pisar.size(); i++) 
-    	cout << pisar[i] << " ";
-	//cout << endl;
 }
