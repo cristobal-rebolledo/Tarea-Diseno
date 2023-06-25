@@ -7,7 +7,7 @@ using namespace std;
 
 long long count = 0;
 
-void creaEscalera(vector<int> &E, int n, int p);
+void creaEscalera(vector<int> &E, int n, int p, int r);
 void pisandoEscalones(vector<int>E, vector<int>& saltos, vector<int>& pisar, int objetivo, int ac , vector<int>& menor);
 int pisandoEscalonesPD(vector<int>E, vector<int>& saltos,int n, int k);
 void imprimir(vector<int>& pisar);
@@ -25,7 +25,10 @@ int main(int argc, char **argv){
 	srand(atoi(argv[3]));
 	vector<int> E(n);
 
-	creaEscalera(E, n, p);
+	int r = rand() % (n - 1) + 1;
+	cout <<"El r: " << r << endl;
+
+	creaEscalera(E, n, p, r);
 	
 	// pone los r escalones rotos en forma aleatoria, los representa con 0
 	for(int i = 0; i < r;i++){
@@ -36,7 +39,7 @@ int main(int argc, char **argv){
 	}
 	
 	// pone en el vector saltos las potencias de p a la k 
-	vector<long long> saltos;
+	vector<int> saltos;
 	while(pow(p, k) <= n){
 		saltos.push_back(pow(p, k));
 		k++;
@@ -79,13 +82,10 @@ int main(int argc, char **argv){
 	return EXIT_SUCCESS;
 }
 
-void creaEscalera(vector<int> &E, int n, int p){
+void creaEscalera(vector<int> &E, int n, int p, int r){
 	for(int i = 0 ; i < n;i++){
 		E[i] = 1;
 	}
-
-	int r = rand() % (n - 1) + 1;
-	cout <<"El r: " << r << endl;
 	
 	for(int i = 0; i < r;i++){
 		int aleatorio = rand() % (n - 1);
@@ -112,7 +112,7 @@ void pisandoEscalones(vector<int> E, vector<int>& saltos, vector<int>& pisar, in
 				pisandoEscalones(E, saltos, pisar, n,  ac + saltos[i], menor);
 				pisar.pop_back();
 			}
-        
+		}
 
     }
 }
@@ -141,7 +141,8 @@ int pisandoEscalonesPD(vector<int>E, vector<int>& saltos,int n, int k){
 void imprimir(vector<int>& pisar){
 	count++;
     cout << "-Forma " << count  << ": pisando los escalones: "; 
-    for (int i = 0; i < (int)pisar.size(); i++) 
+    for (int i = 0; i < (int)pisar.size(); i++){
     	cout << pisar[i] << " ";
+	}
 	//cout << endl;
 }
