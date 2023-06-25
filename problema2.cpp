@@ -14,7 +14,7 @@ void CrearGrafoIslas(vector<vector<int>>& G, int m);
 void imprimirGrafos(vector<vector<int>>& G, int n);
 void DefCosto(vector<vector<int>>& B, int k, int b);
 
-int minDistance(int dist[], bool sptSet[], int V)
+int minDistance(vector<int>& dist, bool sptSet[], int V)
 {
     // Initialize min value
     int min = INT_MAX, min_index;
@@ -28,15 +28,15 @@ int minDistance(int dist[], bool sptSet[], int V)
  
 // A utility function to print the constructed distance
 // array
-void printSolution(int dist[], int V) {
+void printSolution(vector<int>& dist, int V) {
     printf("Vertex \t\t Distance from Source\n");
     for (int i = 0; i < V; i++)
         printf("%d \t\t\t\t %d\n", i, dist[i]);
 }
  
 
-void dijkstra(vector<vector<int>>& graph, int src, int V) {
-    int dist[V]; 
+vector<int> dijkstra(vector<vector<int>>& graph, int src, int V) {
+    vector<int> dist(V); 
  
     bool sptSet[V]; 
 
@@ -61,6 +61,7 @@ void dijkstra(vector<vector<int>>& graph, int src, int V) {
  
     // print the constructed distance array
     printSolution(dist, V);
+	return dist;
 }
 
 // driver's code
@@ -94,28 +95,45 @@ int main(int argc, char **argv) {
 
 	vector<int> Aptos(barcos);
 
+	vector<int> DijCiudad(n);
+
+	vector<int> DijIslas(m);
+
 	vector<vector<int>> CostoBarcos(k,vector<int>(barcos));
 
 	declararPuertos(Aptos, barcos, m);
 
+	for(int i = 0; i<barcos;i++){
+		cout<<"la isla "<< Aptos[i] << " es apta para recibir barcos" << endl;
+	}
+
     declararPuertos(puertos, k, n);
 
+	for(int i = 0; i<k;i++){
+		cout<<"la ciudad "<< puertos[i] << " tiene un puerto" << endl;
+	}
+
+	cout<<"Grafo de la ciudad:"<<endl;
+
     imprimirGrafos(GrafoCiudad, n);
+
+	cout<<"Grafo de las islas:"<<endl;
 
 	imprimirGrafos(GrafoIslas, m);
 
 	DefCosto(CostoBarcos, k, barcos);
 
+	cout<<"Costo de los barcos:"<<endl;
+
 	for(int i = 0; i<k; i++){
 		for(int j = 0; j<barcos; j++){
-			cout<<CostoBarcos[i][j]<< " ";
+			cout<< "la ciudad "<< puertos[i] << " hacia la isla " << Aptos[j] << " tiene un costo de: " << CostoBarcos[i][j]<< endl;
 		}
-		cout<<endl;
 	}
 
-    dijkstra(GrafoCiudad, 0, n);
+    DijCiudad = dijkstra(GrafoCiudad, 0, n);
 
-	dijkstra(GrafoIslas, 0, m);
+	DijIslas = dijkstra(GrafoIslas, 0, m);
  
     return 0;
     }
