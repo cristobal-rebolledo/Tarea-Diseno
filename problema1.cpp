@@ -30,14 +30,6 @@ int main(int argc, char **argv){
 
 	creaEscalera(E, n, p, r);
 	
-	// pone los r escalones rotos en forma aleatoria, los representa con 0
-	for(int i = 0; i < r;i++){
-		int aleatorio = rand() % (n - 1);
-		while(E[aleatorio] == 0)
-			aleatorio = rand() % (n - 1);
-		E[aleatorio] = 0;
-	}
-	
 	// pone en el vector saltos las potencias de p a la k 
 	vector<int> saltos;
 	while(pow(p, k) <= n){
