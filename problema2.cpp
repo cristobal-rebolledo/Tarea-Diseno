@@ -77,6 +77,7 @@ int main(int argc, char **argv) {
 	n = atoi(argv[1]); //numero de ciudades
 	m = atoi(argv[2]); //numero de islas
 	k = atoi(argv[3]); //numero de puertos
+	srand(1000);
 	int recibir = log2(k);
 	int barcos = log2(m);
 
