@@ -1,6 +1,3 @@
-// C program for Dijkstra's single source shortest path
-// algorithm. The program is for adjacency matrix
-// representation of the graph
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -15,6 +12,7 @@ void CrearGrafoCiudad(vector<vector<int>>& G, int n);
 void declararPuertos(vector<int>& p, int k, int n);
 void CrearGrafoIslas(vector<vector<int>>& G, int m);
 void imprimirGrafos(vector<vector<int>>& G, int n);
+void DefCosto(vector<vector<int>>& B, int k, int b);
 
 int minDistance(int dist[], bool sptSet[], int V)
 {
@@ -67,7 +65,7 @@ void dijkstra(vector<vector<int>>& graph, int src, int V) {
 
 // driver's code
 int main(int argc, char **argv) {
-    /* Let us create the example graph discussed above */
+
 	int n, m, k = 0;
 	if(argc != 4 || atoi(argv[1]) <= atoi(argv[3])){
 		cout << "Error. Debe ejecutarse como ./problema1 n m k. y n>k" << endl;
@@ -78,7 +76,6 @@ int main(int argc, char **argv) {
 	m = atoi(argv[2]); //numero de islas
 	k = atoi(argv[3]); //numero de puertos
 	srand(1000);
-	int recibir = log2(k);
 	int barcos = log2(m);
 
 	//creacion del grafo
@@ -87,7 +84,7 @@ int main(int argc, char **argv) {
 
 	vector<vector<int>> GrafoCiudad(n,vector<int>(n));
 
-	vector<vector<int>> GrafoIslas(n,vector<int>(n));
+	vector<vector<int>> GrafoIslas(m,vector<int>(m));
 
     CrearGrafoCiudad(GrafoCiudad, n);
 
@@ -95,15 +92,26 @@ int main(int argc, char **argv) {
 
     vector<int> puertos(k);
 
-	vector<int> Aptos(recibir);
+	vector<int> Aptos(barcos);
 
-	declararPuertos(Aptos, recibir, m);
+	vector<vector<int>> CostoBarcos(k,vector<int>(barcos));
+
+	declararPuertos(Aptos, barcos, m);
 
     declararPuertos(puertos, k, n);
 
     imprimirGrafos(GrafoCiudad, n);
 
 	imprimirGrafos(GrafoIslas, m);
+
+	DefCosto(CostoBarcos, k, barcos);
+
+	for(int i = 0; i<k; i++){
+		for(int j = 0; j<barcos; j++){
+			cout<<CostoBarcos[i][j]<< " ";
+		}
+		cout<<endl;
+	}
 
     dijkstra(GrafoCiudad, 0, n);
 
@@ -220,36 +228,13 @@ void imprimirGrafos(vector<vector<int>>& G, int n) {
 	}
 	cout << endl;
 }
-/*
-	int** GrafoIslas = new int*[m];
-    for (int i = 0; i < m; i++){
-        GrafoIslas[i] = new int[m];
-    }
 
-	for(int i = 0; i<m ; i++){
-		for(int j = 0; j<=i;j++){
-			int eleatorio = rand()%2;
-			if(i==j){
-				GrafoIslas[i][j] = 0;
-				GrafoIslas[j][i] = 0;
-			}
-			else if(eleatorio == 1){
-				int x = (rand()%20) + 1;
-				GrafoIslas[i][j] = x;
-				GrafoIslas[j][i] = x;
-			}
-			else{
-				GrafoIslas[j][i] = 0;
-				GrafoIslas[i][j] = 0;
-			}
+void DefCosto(vector<vector<int>>& B, int k, int b){
+	for(int i = 0; i<k; i++){
+		for(int j = 0; j<b; j++){
+			int x = (rand()%41) - 20;
+			B[i][j] = x;
 		}
 	}
+}
 
-	cout<<"GrafoCiudad: "<< endl;
-	for(int i = 0; i<m ; i++){
-		for(int j = 0; j<m;j++){
-			cout << GrafoCiudad[i][j] << " ";
-		}
-		cout << endl;
-	}
-*/
