@@ -7,14 +7,13 @@ using namespace std;
 
 long long count = 0;
 
-void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>& pisar, long long objetivo, long long ac , vector<long long>& menor);
-long long pisandoEscalonesPD(long long *E, vector<long long>& saltos,long long n, long long k);
+void creaEscalera(vector<int> &E, int n, int p, int r);
+void pisandoEscalones(vector<int>E, vector<int>& saltos, vector<int>& pisar, int objetivo, int ac , vector<int>& menor);
+int pisandoEscalonesPD(vector<int>E, vector<int>& saltos,int n, int k);
 
 
 int main(int argc, char **argv){
-	
-	long long n, p, k = 0;
-	
+	int n, p, k = 0;
 	if(argc != 4){
 		cout << "Error. Debe ejecutarse como ./problema1 n p seed" << endl;
 		exit(EXIT_FAILURE);
@@ -23,58 +22,45 @@ int main(int argc, char **argv){
 	n = atoi(argv[1]);
 	p = atoi(argv[2]);
 	srand(atoi(argv[3]));
-	
-	long long *E = new long long[n];
+	vector<int> E(n);
 
-	// llena el arreglo con 1
-	for(long long i = 0 ; i < n;i++)
-		E[i] = 1;
-
-	long long r = rand() % (n - 1) + 1;
+	int r = rand() % (n - 1) + 1;
 	cout <<"El r: " << r << endl;
-	
-	// pone los r escalones rotos en forma aleatoria, los representa con 0
-	for(int i = 0; i < r;i++){
-		int aleatorio = rand() % (n - 1);
-		while(E[aleatorio] == 0)
-			aleatorio = rand() % (n - 1);
-		E[aleatorio] = 0;
-	}
+
+	creaEscalera(E, n, p, r);
 	
 	// pone en el vector saltos las potencias de p a la k 
-	vector<long long> saltos;
+	vector<int> saltos;
 	while(pow(p, k) <= n){
 		saltos.push_back(pow(p, k));
 		k++;
 	}
+	k--;
 
-	for(long long i = 0; i < n;i++)
+	for(int i = 0; i < n;i++)
 		cout << E[i] << " " ;
 	cout << endl;
 	cout << endl;
-	k--;
 
-    vector<long long> pisar; // vector que guarda los saltos para llegar a n
-	
-	vector<long long> menor;   // vector que guarda la menor cantidad de saltos para llegar a n
+    vector<int> pisar; // vector que guarda los saltos para llegar a n
 	double t1 = omp_get_wtime();
-
+	vector<int> menor;   // vector que guarda la menor cantidad de saltos para llegar a n
+	
 	pisandoEscalones(E, saltos, pisar,n, 0,menor);   // funcion fuerza bruta
 	
 	double t2 = omp_get_wtime();
 	double tiempo = t2 - t1;
 
 	cout << "Menor cantidad de saltos: " << endl;;
-	for (long long i = 0; i < (long long)menor.size(); i++) 
+	for (int i = 0; i < (int)menor.size(); i++) 
         cout << menor[i] << " ";
-	cout << endl;
 	cout << endl;
 	cout << "\nTiempo fuerza bruta: " << tiempo << "s" << endl;
 	cout << "Con " << count << " soluciones." << endl;
 		
 	
     double t3 = omp_get_wtime();
-	long long cantidadSaltos = pisandoEscalonesPD(E, saltos, n, k);  // funcion programacion dinamica
+	int cantidadSaltos = pisandoEscalonesPD(E, saltos, n, k);
 	double t4 = omp_get_wtime();
 	double tiempo2 = t4 - t3;
 	cout << "\nTiempo PD: " << tiempo2 << "s" << endl;
@@ -87,7 +73,20 @@ int main(int argc, char **argv){
 	return EXIT_SUCCESS;
 }
 
-void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>& pisar, long long n,  long long ac, vector<long long>& menor) {
+void creaEscalera(vector<int> &E, int n, int p, int r){
+	for(int i = 0 ; i < n;i++){
+		E[i] = 1;
+	}
+	
+	for(int i = 0; i < r;i++){
+		int aleatorio = rand() % (n - 1);
+		while(E[aleatorio] == 0)
+			aleatorio = rand() % (n - 1);
+		E[aleatorio] = 0;
+	}
+}
+
+void pisandoEscalones(vector<int> E, vector<int>& saltos, vector<int>& pisar, int n,  int ac, vector<int>& menor) {
     if (ac == n) {
 		
 		if(menor.size() == 0 || pisar.size() < menor.size())  // actualiza la menor cantidad de saltos
@@ -97,20 +96,20 @@ void pisandoEscalones(long long *E, vector<long long>& saltos, vector<long long>
 		count++;
         
     } else  {  
-
-        for (long long i = 0;  i< (long long) saltos.size();i++)   // tipos de saltos
-			if(E[ac+saltos[i]-1] == 1){                            // salto valido
-				pisar.push_back(ac+saltos[i]);                     // guarda los tipos de saltos en el vector
+        // Continuar explorando posibilidades
+        for (int i = 0;  i< (int) saltos.size();i++) {
+			if(E[ac+saltos[i]-1] == 1){
+				pisar.push_back(ac+saltos[i]);
 				pisandoEscalones(E, saltos, pisar, n,  ac + saltos[i], menor);
 				pisar.pop_back();
 			}
-        
+		}
 
     }
 }
 
 
-long long pisandoEscalonesPD(long long *E, vector<long long>& saltos,long long n, long long k){
+int pisandoEscalonesPD(vector<int>E, vector<int>& saltos,int n, int k){
 	long long *A = new long long[n];
 	for(int i = 0; i < n; i++)
 		A[i] = 0;
@@ -129,3 +128,4 @@ long long pisandoEscalonesPD(long long *E, vector<long long>& saltos,long long n
 
 	return A[n-1];
 }
+

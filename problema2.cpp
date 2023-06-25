@@ -1,4 +1,3 @@
-
 // C program for Dijkstra's single source shortest path
 // algorithm. The program is for adjacency matrix
 // representation of the graph
@@ -12,11 +11,10 @@
 #include <omp.h>
 using namespace std;
  
-// Number of vertices in the graph
- 
-// A utility function to find the vertex with minimum
-// distance value, from the set of vertices not yet included
-// in shortest path tree
+void CrearGrafoCiudad(vector<vector<int>>& G, int n);
+void declararPuertos(vector<int>& p, int k, int n);
+void imprimirGrafos(vector<vector<int>>& G, int n);
+
 int minDistance(int dist[], bool sptSet[], int V)
 {
     // Initialize min value
@@ -31,29 +29,18 @@ int minDistance(int dist[], bool sptSet[], int V)
  
 // A utility function to print the constructed distance
 // array
-void printSolution(int dist[], int V)
-{
+void printSolution(int dist[], int V) {
     printf("Vertex \t\t Distance from Source\n");
     for (int i = 0; i < V; i++)
         printf("%d \t\t\t\t %d\n", i, dist[i]);
 }
  
-// Function that implements Dijkstra's single source
-// shortest path algorithm for a graph represented using
-// adjacency matrix representation
-void dijkstra(int **graph, int src, int V)
-{
-    int dist[V]; // The output array.  dist[i] will hold the
-                 // shortest
-    // distance from src to i
+
+void dijkstra(vector<vector<int>>& graph, int src, int V) {
+    int dist[V]; 
  
-    bool sptSet[V]; // sptSet[i] will be true if vertex i is
-                    // included in shortest
-    // path tree or shortest distance from src to i is
-    // finalized
- 
-    // Initialize all distances as INFINITE and stpSet[] as
-    // false
+    bool sptSet[V]; 
+
     for (int i = 0; i < V; i++)
         dist[i] = INT_MAX, sptSet[i] = false;
  
@@ -62,26 +49,15 @@ void dijkstra(int **graph, int src, int V)
  
     // Find shortest path for all vertices
     for (int count = 0; count < V - 1; count++) {
-        // Pick the minimum distance vertex from the set of
-        // vertices not yet processed. u is always equal to
-        // src in the first iteration.
         int u = minDistance(dist, sptSet, V);
  
         // Mark the picked vertex as processed
         sptSet[u] = true;
- 
-        // Update dist value of the adjacent vertices of the
-        // picked vertex.
+
         for (int v = 0; v < V; v++)
- 
-            // Update dist[v] only if is not in sptSet,
-            // there is an edge from u to v, and total
-            // weight of path from src to  v through u is
-            // smaller than current value of dist[v]
-            if (!sptSet[v] && graph[u][v]
-                && dist[u] != INT_MAX
-                && dist[u] + graph[u][v] < dist[v])
+            if (!sptSet[v] && graph[u][v] && dist[u] != INT_MAX && dist[u] + graph[u][v] < dist[v]){
                 dist[v] = dist[u] + graph[u][v];
+            }
     }
  
     // print the constructed distance array
@@ -89,8 +65,7 @@ void dijkstra(int **graph, int src, int V)
 }
 
 // driver's code
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     /* Let us create the example graph discussed above */
 	int n, m, k = 0;
 	if(argc != 4 || atoi(argv[1]) <= atoi(argv[3])){
@@ -106,39 +81,55 @@ int main(int argc, char **argv)
 	int barcos = log2(m);
 
 	//creacion del grafo
-	int** GrafoCiudad = new int*[n];
-    for (int i = 0; i < n; i++){
-        GrafoCiudad[i] = new int[n];
-    }
-	for(int i = 0; i<n ; i++){
-		for(int j = 0; j<n;j++){
-			int eleatorio = rand()%2;
-			if(i==j){
-				GrafoCiudad[i][j] = 0;
-			}
-			else if(eleatorio == 1){
-				int x = (rand()%20) + 1;
-				GrafoCiudad[i][j] = x;
-			}
-			else{
-				GrafoCiudad[i][j] = 0;
-			}
-		}
-	}
-	int puertos[k];
-	for(int i = 0; i<k ; i++){
-		int x = rand()%n;
-		puertos[i] = x;
-	}
-	for(int i = 0; i<n ; i++){
-		for(int j = 0; j<n;j++){
-			cout << GrafoCiudad[i][j] << " ";
-		}
-		cout << endl;
-	}
- 
-    // Function call
+
+    srand(1000);
+
+	vector<vector<int>> GrafoCiudad(n,vector<int>(n));
+
+    CrearGrafoCiudad(GrafoCiudad, n);
+
+    vector<int> puertos(k);
+
+    declararPuertos(puertos, k, n);
+
+    imprimirGrafos(GrafoCiudad, n);
+
     dijkstra(GrafoCiudad, 0, n);
  
     return 0;
+}
+
+void CrearGrafoCiudad(vector<vector<int>>& G, int n) {
+    int Aleatorio = rand()%2;
+	for(int i = 0; i<n ; i++){
+		for(int j = 0; j<n;j++){
+			int Aleatorio = rand()%2;
+			if(i==j){
+				G[i][j] = 0;
+			}
+			else if(Aleatorio == 1){
+				int x = (rand()%20) + 1;
+				G[i][j] = x;
+			}
+			else{
+				G[i][j] = 0;
+			}
+		}
+	}
+}
+
+void declararPuertos(vector<int>& p, int k, int n) {
+    for(int i = 0; i<k ; i++){
+		int x = rand()%n;
+		p[i] = x;
+	}
+}
+
+void imprimirGrafos(vector<vector<int>>& G, int n) {
+    for(int i = 0; i<n ; i++){
+		for(int j = 0; j<n;j++){
+			cout << G[i][j] << " ";
+		}
+		cout << endl;
+	}
 }
