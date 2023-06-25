@@ -14,14 +14,14 @@ void imprimir(vector<long long>& pisar);
 
 int main(int argc, char **argv){
 	long long n, p, k = 0;
-	if(argc != 3){
-		cout << "Error. Debe ejecutarse como ./problema1 n p" << endl;
+	if(argc != 4){
+		cout << "Error. Debe ejecutarse como ./problema1 n p seed" << endl;
 		exit(EXIT_FAILURE);
 	}
 
 	n = atoi(argv[1]);
 	p = atoi(argv[2]);
-	
+	srand(atoi(argv[3]));
 	long long *E = new long long[n];
 
 	
