@@ -27,7 +27,16 @@ int main(int argc, char **argv){
 
 	creaEscalera(E, n, p);
 	
-	vector<int> saltos;
+	// pone los r escalones rotos en forma aleatoria, los representa con 0
+	for(int i = 0; i < r;i++){
+		int aleatorio = rand() % (n - 1);
+		while(E[aleatorio] == 0)
+			aleatorio = rand() % (n - 1);
+		E[aleatorio] = 0;
+	}
+	
+	// pone en el vector saltos las potencias de p a la k 
+	vector<long long> saltos;
 	while(pow(p, k) <= n){
 		saltos.push_back(pow(p, k));
 		k++;
@@ -47,6 +56,7 @@ int main(int argc, char **argv){
 	
 	double t2 = omp_get_wtime();
 	double tiempo = t2 - t1;
+
 	cout << "Menor cantidad de saltos: " << endl;;
 	for (int i = 0; i < (int)menor.size(); i++) 
         cout << menor[i] << " ";
@@ -54,9 +64,7 @@ int main(int argc, char **argv){
 	cout << "\nTiempo fuerza bruta: " << tiempo << "s" << endl;
 	cout << "Con " << count << " soluciones." << endl;
 		
-      // Caso base: hay una forma de llegar al escalón 0
 	
-    // Calcular el número de formas de llegar a cada escalón utilizando programación dinámica
     double t3 = omp_get_wtime();
 	int cantidadSaltos = pisandoEscalonesPD(E, saltos, n, k);
 	double t4 = omp_get_wtime();
@@ -94,8 +102,7 @@ void pisandoEscalones(vector<int> E, vector<int>& saltos, vector<int>& pisar, in
 			menor = pisar;
 			
 		ac = 0;
-		++count;
-		//cout << endl;
+		count++;
         
     } else  {  
         // Continuar explorando posibilidades
@@ -105,7 +112,8 @@ void pisandoEscalones(vector<int> E, vector<int>& saltos, vector<int>& pisar, in
 				pisandoEscalones(E, saltos, pisar, n,  ac + saltos[i], menor);
 				pisar.pop_back();
 			}
-        }
+        
+
     }
 }
 
