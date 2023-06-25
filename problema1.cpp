@@ -10,7 +10,6 @@ long long count = 0;
 void creaEscalera(vector<int> &E, int n, int p, int r);
 void pisandoEscalones(vector<int>E, vector<int>& saltos, vector<int>& pisar, int objetivo, int ac , vector<int>& menor);
 int pisandoEscalonesPD(vector<int>E, vector<int>& saltos,int n, int k);
-void imprimir(vector<int>& pisar);
 
 
 int main(int argc, char **argv){
@@ -130,11 +129,3 @@ int pisandoEscalonesPD(vector<int>E, vector<int>& saltos,int n, int k){
 	return A[n-1];
 }
 
-void imprimir(vector<int>& pisar){
-	count++;
-    cout << "-Forma " << count  << ": pisando los escalones: "; 
-    for (int i = 0; i < (int)pisar.size(); i++){
-    	cout << pisar[i] << " ";
-	}
-	//cout << endl;
-}
