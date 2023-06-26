@@ -61,24 +61,21 @@ vector<int> dijkstra(vector<vector<int>>& graph, int src, int V) {
 	return dist;
 }
 
-// driver's code
 int main(int argc, char **argv) {
 
 	int n, m, k = 0;
-	if(argc != 4 || atoi(argv[1]) <= atoi(argv[3])){
-		cout << "Error. Debe ejecutarse como ./problema1 n m k. y n>k" << endl;
+	if(argc != 5 || atoi(argv[1]) <= atoi(argv[3])){
+		cout << "Error. Debe ejecutarse como ./problema1 n m k seed. y n>k" << endl;
 		exit(EXIT_FAILURE);
 	}
 
 	n = atoi(argv[1]); //numero de ciudades
 	m = atoi(argv[2]); //numero de islas
 	k = atoi(argv[3]); //numero de puertos
-	srand(1000);
+	srand(atoi(argv[5]));
 	int barcos = log2(m);
 
 	//creacion del grafo
-
-    srand(1000);
 
 	vector<vector<int>> GrafoCiudad(n,vector<int>(n));
 
