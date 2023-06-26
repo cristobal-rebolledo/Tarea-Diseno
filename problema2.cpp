@@ -57,7 +57,7 @@ vector<int> dijkstra(vector<vector<int>>& graph, int src, int V) {
     }
     }
  
-    printSolution(dist, V);
+    //printSolution(dist, V);
 	return dist;
 }
 
@@ -100,21 +100,21 @@ int main(int argc, char **argv) {
 
 	declararPuertos(Aptos, barcos, m);
 
-	for(int i = 0; i<barcos;i++){
+	/*for(int i = 0; i<barcos;i++){
 		cout<<"la isla "<< Aptos[i] << " es apta para recibir barcos" << endl;
 	}
 
-	cout << endl;
+	cout << endl;*/
 
     declararPuertos(puertos, k, n);
 
-	for(int i = 0; i<k;i++){
+	/*for(int i = 0; i<k;i++){
 		cout<<"la ciudad "<< puertos[i] << " tiene un puerto" << endl;
 	}
 
-	cout << endl;
+	cout << endl;*/
 
-	cout<<"Grafo de la ciudad:"<<endl;
+	/*cout<<"Grafo de la ciudad:"<<endl;
 
     imprimirGrafos(GrafoCiudad, n);
 
@@ -124,18 +124,18 @@ int main(int argc, char **argv) {
 
 	imprimirGrafos(GrafoIslas, m);
 
-	cout << endl;
+	cout << endl;*/
 
 	DefCosto(CostoBarcos, k, barcos);
 
-	cout<<"Costo de los barcos:"<<endl;
+	/*cout<<"Costo de los barcos:"<<endl;
 
 	for(int i = 0; i<k; i++){
 		for(int j = 0; j<barcos; j++){
 			cout<< "la ciudad "<< puertos[i] << " hacia la isla " << Aptos[j] << " tiene un costo de: " << CostoBarcos[i][j]<< endl;
 		}
 	}
-	cout << endl;
+	cout << endl;*/
 
 	double t1 = omp_get_wtime();
 
