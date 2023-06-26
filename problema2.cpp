@@ -7,7 +7,7 @@
 #include <vector>
 #include <omp.h>
 using namespace std;
- 
+
 void CrearGrafoCiudad(vector<vector<int>>& G, int n);
 void declararPuertos(vector<int>& p, int k, int n);
 void CrearGrafoIslas(vector<vector<int>>& G, int m);
@@ -276,16 +276,18 @@ void Solucion(vector<vector<int>>& Costo, vector<int>& p, vector<int>& a, vector
 	int IslaEco = DijI[a[0]];
 	int NI = a[0];
 	int BarcoEco = Costo[0][0];
+	int suma;
+	int menor = PuertoEco + IslaEco + BarcoEco;
 	for(int i = 0; i<k; i++){
 		for(int j = 0; j<r; j++){
-			int suma = DijC[p[i]] + Costo[i][j] + DijI[a[j]];
-			int menor = PuertoEco + IslaEco + BarcoEco;
+			suma = DijC[p[i]] + Costo[i][j] + DijI[a[j]];
 			if(suma < menor){
 				PuertoEco = DijC[p[i]];
 				IslaEco =  DijI[a[j]];
 				BarcoEco = Costo[i][j];
 				NP = p[i];
 				NI = a[j];
+				menor = PuertoEco + IslaEco + BarcoEco;
 			}
 		}
 	}
