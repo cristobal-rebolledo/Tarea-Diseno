@@ -13,6 +13,7 @@ void declararPuertos(vector<int>& p, int k, int n);
 void CrearGrafoIslas(vector<vector<int>>& G, int m);
 void imprimirGrafos(vector<vector<int>>& G, int n);
 void DefCosto(vector<vector<int>>& B, int k, int b);
+void Solucion(vector<vector<int>>& Costo, vector<int>& p, vector<int>& a, vector<int>& DijC, vector<int>& DijI, int r, int k);
 
 int minDistance(vector<int>& dist, bool sptSet[], int V)
 {
@@ -107,19 +108,27 @@ int main(int argc, char **argv) {
 		cout<<"la isla "<< Aptos[i] << " es apta para recibir barcos" << endl;
 	}
 
+	cout << endl;
+
     declararPuertos(puertos, k, n);
 
 	for(int i = 0; i<k;i++){
 		cout<<"la ciudad "<< puertos[i] << " tiene un puerto" << endl;
 	}
 
+	cout << endl;
+
 	cout<<"Grafo de la ciudad:"<<endl;
 
     imprimirGrafos(GrafoCiudad, n);
 
+	cout << endl;
+
 	cout<<"Grafo de las islas:"<<endl;
 
 	imprimirGrafos(GrafoIslas, m);
+
+	cout << endl;
 
 	DefCosto(CostoBarcos, k, barcos);
 
@@ -130,10 +139,21 @@ int main(int argc, char **argv) {
 			cout<< "la ciudad "<< puertos[i] << " hacia la isla " << Aptos[j] << " tiene un costo de: " << CostoBarcos[i][j]<< endl;
 		}
 	}
+	cout << endl;
+
+	cout<<"dijkstra de la ciudad:"<<endl;
 
     DijCiudad = dijkstra(GrafoCiudad, 0, n);
 
+	cout << endl;
+
+	cout<<"dijkstra de las Islas:"<<endl;
+
 	DijIslas = dijkstra(GrafoIslas, 0, m);
+
+	cout << endl;
+
+	Solucion(CostoBarcos, puertos, Aptos, DijCiudad, DijIslas, barcos, k);
  
     return 0;
     }
@@ -200,7 +220,6 @@ void CrearGrafoIslas(vector<vector<int>>& G, int m){
 					connection2[i] = 1;
 				}
 				else if(Aleatorio == 0 and j==m-1){
-					cout<<"aqui"<<endl;
 					int r = (rand()%(m-cont-1)) + 1 + cont;
 					int x = (rand()%20) + 1;
 					G[j][r] = x;
@@ -222,11 +241,6 @@ void CrearGrafoIslas(vector<vector<int>>& G, int m){
 				connect = true;
 			}
 		}
-		for(int j = 0; j < m; j++){
-			cout<<connection2[j]<<" ";
-		}
-		cout << endl;
-		cout << endl;
 	}
 }
 
@@ -256,3 +270,31 @@ void DefCosto(vector<vector<int>>& B, int k, int b){
 	}
 }
 
+void Solucion(vector<vector<int>>& Costo, vector<int>& p, vector<int>& a, vector<int>& DijC, vector<int>& DijI, int r, int k){
+	int PuertoEco = DijC[p[0]];
+	int NP = p[0];
+	int IslaEco = DijI[a[0]];
+	int NI = a[0];
+	int BarcoEco = Costo[0][0];
+	for(int i = 0; i<k; i++){
+		for(int j = 0; j<r; j++){
+			int suma = DijC[p[i]] + Costo[i][j] + DijI[a[j]];
+			int menor = PuertoEco + IslaEco + BarcoEco;
+			if(suma < menor){
+				PuertoEco = DijC[p[i]];
+				IslaEco =  DijI[a[j]];
+				BarcoEco = Costo[i][j];
+				NP = p[i];
+				NI = a[j];
+			}
+		}
+	}
+
+	cout << "la ruta mas economica es: " << endl;
+	cout << "ciudad: "<< NP << " con un costo de " << PuertoEco << endl;
+	cout << "Isla: "<< NI << " con un costo de " << IslaEco <<  endl;
+	cout << "el costo del barco fue: "<< BarcoEco << endl;
+	cout << "costo total: " << PuertoEco + IslaEco + BarcoEco << endl;
+
+
+}
