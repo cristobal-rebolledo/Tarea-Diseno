@@ -6,6 +6,7 @@
 #include <cmath>
 #include <vector>
 #include <omp.h>
+#include <algorithm>
 using namespace std;
 
 void CrearGrafoCiudad(vector<vector<int>>& G, int n);
@@ -17,7 +18,6 @@ void Solucion(vector<vector<int>>& Costo, vector<int>& p, vector<int>& a, vector
 
 int minDistance(vector<int>& dist, bool sptSet[], int V)
 {
-    // Initialize min value
     int min = INT_MAX, min_index;
  
     for (int v = 0; v < V; v++)
@@ -44,14 +44,11 @@ vector<int> dijkstra(vector<vector<int>>& graph, int src, int V) {
     for (int i = 0; i < V; i++)
         dist[i] = INT_MAX, sptSet[i] = false;
  
-    // Distance of source vertex from itself is always 0
     dist[src] = 0;
  
-    // Find shortest path for all vertices
     for (int count = 0; count < V - 1; count++) {
         int u = minDistance(dist, sptSet, V);
  
-        // Mark the picked vertex as processed
         sptSet[u] = true;
  
         for (int v = 0; v < V; v++)
@@ -60,7 +57,6 @@ vector<int> dijkstra(vector<vector<int>>& graph, int src, int V) {
     }
     }
  
-    // print the constructed distance array
     printSolution(dist, V);
 	return dist;
 }
@@ -141,6 +137,8 @@ int main(int argc, char **argv) {
 	}
 	cout << endl;
 
+	double t1 = omp_get_wtime();
+
 	cout<<"dijkstra de la ciudad:"<<endl;
 
     DijCiudad = dijkstra(GrafoCiudad, 0, n);
@@ -154,6 +152,12 @@ int main(int argc, char **argv) {
 	cout << endl;
 
 	Solucion(CostoBarcos, puertos, Aptos, DijCiudad, DijIslas, barcos, k);
+
+	double t2 = omp_get_wtime();
+
+	double tiempo = t2 - t1;
+
+	cout << "\nTiempo : " << tiempo << "s" << endl;
  
     return 0;
     }
@@ -245,10 +249,21 @@ void CrearGrafoIslas(vector<vector<int>>& G, int m){
 }
 
 void declararPuertos(vector<int>& p, int k, int n) {
-	for(int i = 0; i<k ; i++){
-		int x = rand()%n;
-		p[i] = x;
+	bool encontrar = true;
+	int x;
+	vector<int> it;	for(int i = 0; i<k ; i++){
+		x = rand()%n;
+		while(encontrar){
+			if(find(p.begin(), p.end(), x) != p.end() && i != 0){
+				x = rand()%n;
+			}
+			else{
+				encontrar =false;
+			}
 		}
+		p[i] = x;
+		encontrar = true;
+	}
 }
 
 void imprimirGrafos(vector<vector<int>>& G, int n) {
