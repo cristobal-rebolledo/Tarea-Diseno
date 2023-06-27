@@ -16,50 +16,9 @@ void imprimirGrafos(vector<vector<int>>& G, int n);
 void DefCosto(vector<vector<int>>& B, int k, int b);
 void Solucion(vector<vector<int>>& Costo, vector<int>& p, vector<int>& a, vector<int>& DijC, vector<int>& DijI, int r, int k);
 
-int minDistance(vector<int>& dist, bool sptSet[], int V)
-{
-    int min = INT_MAX, min_index;
- 
-    for (int v = 0; v < V; v++)
-        if (sptSet[v] == false && dist[v] <= min)
-            min = dist[v], min_index = v;
- 
-    return min_index;
-}
- 
-// A utility function to print the constructed distance
-// array
-void printSolution(vector<int>& dist, int V) {
-    printf("Vertex \t\t Distance from Source\n");
-    for (int i = 0; i < V; i++)
-        printf("%d \t\t\t\t %d\n", i, dist[i]);
-}
- 
-
-vector<int> dijkstra(vector<vector<int>>& graph, int src, int V) {
-    vector<int> dist(V); 
- 
-    bool sptSet[V]; 
-
-    for (int i = 0; i < V; i++)
-        dist[i] = INT_MAX, sptSet[i] = false;
- 
-    dist[src] = 0;
- 
-    for (int count = 0; count < V - 1; count++) {
-        int u = minDistance(dist, sptSet, V);
- 
-        sptSet[u] = true;
- 
-        for (int v = 0; v < V; v++)
-            if (!sptSet[v] && graph[u][v] && dist[u] != INT_MAX && dist[u] + graph[u][v] < dist[v]){
-                dist[v] = dist[u] + graph[u][v];
-    }
-    }
- 
-    //printSolution(dist, V);
-	return dist;
-}
+int minDistance(vector<int>& dist, bool sptSet[], int V);
+void printSolution(vector<int>& dist, int V);
+vector<int> dijkstra(vector<vector<int>>& graph, int src, int V);
 
 int main(int argc, char **argv) {
 
@@ -72,7 +31,7 @@ int main(int argc, char **argv) {
 	n = atoi(argv[1]); //numero de ciudades
 	m = atoi(argv[2]); //numero de islas
 	k = atoi(argv[3]); //numero de puertos
-	srand(atoi(argv[5]));
+	srand(atoi(argv[4]));
 	int barcos = log2(m);
 
 	//creacion del grafo
@@ -97,21 +56,21 @@ int main(int argc, char **argv) {
 
 	declararPuertos(Aptos, barcos, m);
 
-	/*for(int i = 0; i<barcos;i++){
+	for(int i = 0; i<barcos;i++){
 		cout<<"la isla "<< Aptos[i] << " es apta para recibir barcos" << endl;
 	}
 
-	cout << endl;*/
+	cout << endl;
 
     declararPuertos(puertos, k, n);
 
-	/*for(int i = 0; i<k;i++){
+	for(int i = 0; i<k;i++){
 		cout<<"la ciudad "<< puertos[i] << " tiene un puerto" << endl;
 	}
 
-	cout << endl;*/
+	cout << endl;
 
-	/*cout<<"Grafo de la ciudad:"<<endl;
+	cout<<"Grafo de la ciudad:"<<endl;
 
     imprimirGrafos(GrafoCiudad, n);
 
@@ -121,18 +80,18 @@ int main(int argc, char **argv) {
 
 	imprimirGrafos(GrafoIslas, m);
 
-	cout << endl;*/
+	cout << endl;
 
 	DefCosto(CostoBarcos, k, barcos);
 
-	/*cout<<"Costo de los barcos:"<<endl;
+	cout<<"Costo de los barcos:"<<endl;
 
 	for(int i = 0; i<k; i++){
 		for(int j = 0; j<barcos; j++){
 			cout<< "la ciudad "<< puertos[i] << " hacia la isla " << Aptos[j] << " tiene un costo de: " << CostoBarcos[i][j]<< endl;
 		}
 	}
-	cout << endl;*/
+	cout << endl;
 
 	double t1 = omp_get_wtime();
 
@@ -311,4 +270,48 @@ void Solucion(vector<vector<int>>& Costo, vector<int>& p, vector<int>& a, vector
 	cout << "costo total: " << PuertoEco + IslaEco + BarcoEco << endl;
 
 
+}
+
+//Dijkstra
+
+int minDistance(vector<int>& dist, bool sptSet[], int V){
+    int min = INT_MAX, min_index;
+ 
+    for (int v = 0; v < V; v++)
+        if (sptSet[v] == false && dist[v] <= min)
+            min = dist[v], min_index = v;
+ 
+    return min_index;
+}
+ 
+void printSolution(vector<int>& dist, int V) {
+    printf("Vertex \t\t Distance from Source\n");
+    for (int i = 0; i < V; i++)
+        printf("%d \t\t\t\t %d\n", i, dist[i]);
+}
+ 
+
+vector<int> dijkstra(vector<vector<int>>& graph, int src, int V) {
+    vector<int> dist(V); 
+ 
+    bool sptSet[V]; 
+
+    for (int i = 0; i < V; i++)
+        dist[i] = INT_MAX, sptSet[i] = false;
+ 
+    dist[src] = 0;
+ 
+    for (int count = 0; count < V - 1; count++) {
+        int u = minDistance(dist, sptSet, V);
+ 
+        sptSet[u] = true;
+ 
+        for (int v = 0; v < V; v++)
+            if (!sptSet[v] && graph[u][v] && dist[u] != INT_MAX && dist[u] + graph[u][v] < dist[v]){
+                dist[v] = dist[u] + graph[u][v];
+    }
+    }
+ 
+    printSolution(dist, V);
+	return dist;
 }
