@@ -20,7 +20,7 @@ Una vez compilado deberá ejecutar el comando ./problema2 entregando como argume
 los valores "n" (numero de ciudades), "m" (numero de archipielagos), "k" (número
 de ciudades con puerto) y una semilla respectivamente.
 
-Es libre descomentar las funciones para imprimir.
+Es libre de descomentar las funciones para imprimir.
 
 Ej: "./problema2 5 9 2 1000"
 
